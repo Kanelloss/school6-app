@@ -34,7 +34,7 @@ public class TeacherDAOImpl implements ITeacherDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             // logging
-            throw new TeacherDAOException("SQL error in inserting teacher: " + teacher);
+            throw new TeacherDAOException("SQL error on inserting teacher: " + teacher);
         }
     }
 
@@ -62,13 +62,25 @@ public class TeacherDAOImpl implements ITeacherDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             // logging
-            throw new TeacherDAOException("SQL error in inserting teacher: " + teacher);
+            throw new TeacherDAOException("SQL error on updating teacher: " + teacher);
         }
     }
 
     @Override
     public void delete(Integer id) throws TeacherDAOException {
+        String sql = "DELETE FROM teachers WHERE id = ?";
+        try  (Connection connection = DBUtil.getConnection();
+              PreparedStatement ps = connection.prepareStatement(sql)) {
 
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            // logging
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // logging
+            throw new TeacherDAOException("SQL error in deleting teacher with id: " + id);
+        }
     }
 
     @Override
