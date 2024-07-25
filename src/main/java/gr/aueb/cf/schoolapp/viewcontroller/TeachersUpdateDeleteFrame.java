@@ -14,7 +14,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
-import gr.aueb.cf.schoolapp.util.DBUtil;
+import gr.aueb.cf.schoolapp.Main;
+import gr.aueb.cf.schoolapp.service.util.DBUtil;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -58,7 +59,7 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 
 	
 	public TeachersUpdateDeleteFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TeachersUpdateDeleteFrame.class.getResource("/resources/eduv2.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
 		setTitle("Ενημέρωση / Διαγραφή Εκπαιδευτή");
 		addWindowListener(new WindowAdapter() {
 			@Override

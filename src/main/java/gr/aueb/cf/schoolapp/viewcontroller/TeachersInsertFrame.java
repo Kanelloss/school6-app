@@ -5,7 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import gr.aueb.cf.schoolapp.util.DBUtil;
+import gr.aueb.cf.schoolapp.Main;
+import gr.aueb.cf.schoolapp.service.util.DBUtil;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,7 +39,7 @@ public class TeachersInsertFrame extends JFrame {
 
 
 	public TeachersInsertFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TeachersInsertFrame.class.getResource("/resources/eduv2.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
 		setTitle("Εισαγωγή Εκπαιδευτών");
 		addWindowListener(new WindowAdapter() {
 			@Override

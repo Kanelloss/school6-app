@@ -1,5 +1,7 @@
 package gr.aueb.cf.schoolapp.viewcontroller;
 
+import gr.aueb.cf.schoolapp.Main;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -20,7 +22,7 @@ public class TeachersMenuFrame extends JFrame {
 
 
 	public TeachersMenuFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(TeachersMenuFrame.class.getResource("/resources/eduv2.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
 		setTitle("Μενού Εκπαιδευτών ");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 427, 358);

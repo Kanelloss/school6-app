@@ -15,8 +15,6 @@ import javax.swing.JButton;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -35,7 +33,7 @@ public class MainMenuFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenuFrame() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MainMenuFrame.class.getResource("/resources/eduv2.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
 		
 		setForeground(Color.WHITE);
 		setTitle("Ποιότητα στην Εκπαίδευση");
