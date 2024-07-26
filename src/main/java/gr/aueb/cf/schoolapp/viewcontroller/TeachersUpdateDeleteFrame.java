@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -15,7 +18,17 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import gr.aueb.cf.schoolapp.Main;
+import gr.aueb.cf.schoolapp.dao.ITeacherDAO;
+import gr.aueb.cf.schoolapp.dao.TeacherDAOImpl;
+import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
+import gr.aueb.cf.schoolapp.dto.TeacherReadOnlyDTO;
+import gr.aueb.cf.schoolapp.dto.TeacherUpdateDTO;
+import gr.aueb.cf.schoolapp.model.Teacher;
+import gr.aueb.cf.schoolapp.service.ITeacherService;
+import gr.aueb.cf.schoolapp.service.TeacherServiceImpl;
+import gr.aueb.cf.schoolapp.service.exceptions.TeacherNotFoundException;
 import gr.aueb.cf.schoolapp.service.util.DBUtil;
+import gr.aueb.cf.schoolapp.validator.TeacherValidator;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +49,10 @@ import java.awt.event.FocusEvent;
 import java.awt.Toolkit;
 
 public class TeachersUpdateDeleteFrame extends JFrame {
+
+	// Wiring
+	private final ITeacherDAO teacherDAO = new TeacherDAOImpl();
+	private final ITeacherService teacherService = new TeacherServiceImpl(teacherDAO);
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -206,41 +223,40 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 		updateBtn = new JButton("Ενημέρωση");
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				// Data Binding
-				// ToDo if (!idText.getText().trim().isEmpty()) do; else return; 
-				int inputId = Integer.parseInt(idText.getText().trim());
-				String inputFirstname = firstnameText.getText().trim();
-				String inputLastname = lastnameText.getText().trim();
-				
-				// Validation
-				validateFirstname(inputFirstname);
-				validateLastname(inputLastname);
-				
-				if (inputFirstname.isEmpty() || inputLastname.isEmpty()) {
-					return;
-				}
-				
-				String sql = "UPDATE teachers SET firstname = ?, lastname = ? WHERE id = ?";
-				try (Connection conn = DBUtil.getConnection();
-						PreparedStatement ps = conn.prepareStatement(sql)) {
-					
-					ps.setString(1, inputFirstname);
-					ps.setString(2, inputLastname);
-					ps.setInt(3, inputId);
-					
-					int answer = JOptionPane.showConfirmDialog(null, "Είστε σίγουρη/ος", "Ενημέρωση", 
-							JOptionPane.YES_NO_OPTION);
-					if (answer == JOptionPane.YES_OPTION) {
-						int rowsAffected = ps.executeUpdate();
-						JOptionPane.showMessageDialog(null, rowsAffected + " γραμμή/ες ενημερώθηκαν", "Ενημέρωση", 
-								JOptionPane.INFORMATION_MESSAGE);
-					} else {
+
+				Map<String, String> errors;
+				String firstnameMessage;
+				String lastnameMessage;
+				Teacher teacher;
+
+
+				if (idText.getText().trim().isEmpty()) return;
+
+				try {
+					TeacherUpdateDTO updateDTO = new TeacherUpdateDTO();
+					updateDTO.setId(Integer.parseInt(idText.getText().trim()));
+					updateDTO.setFirstname(firstnameText.getText().trim());
+					updateDTO.setLastname(lastnameText.getText().trim());
+
+					errors = TeacherValidator.validate(updateDTO);
+
+					if (!errors.isEmpty()) {
+						firstnameMessage = errors.getOrDefault("firstname", "");
+						lastnameMessage = errors.getOrDefault("lastname", "");
+
+						errorFirstname.setText(firstnameMessage);
+						errorLastname.setText(lastnameMessage);
 						return;
-					}		
-				} catch (SQLException e1) {
-					//e1.printStackTrace();
-					JOptionPane.showMessageDialog(null,  "Insertion error", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+
+					teacher = teacherService.updateTeacher(updateDTO);
+					TeacherReadOnlyDTO readOnlyDTO = mapToReadOnlyDTO(teacher);
+
+					JOptionPane.showMessageDialog(null, "Teacher with id: " + readOnlyDTO.getId() + " updated successfully", "Update", JOptionPane.INFORMATION_MESSAGE);
+
+				} catch (TeacherDAOException | TeacherNotFoundException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,  e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
@@ -297,31 +313,33 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 	private void buildTable() {
 		
 		Vector<String> vector;
-		
-		String sql = "SELECT id, firstname, lastname FROM teachers WHERE lastname LIKE ?";
-		try (Connection conn = DBUtil.getConnection();
-				PreparedStatement ps = conn.prepareStatement(sql)) {
-			
-			ps.setString(1, lastnameSearchText.getText().trim() + "%" );
-			
-			ResultSet rs = ps.executeQuery();
-			
-			// Clear model -> clear table - MVVM
-			for (int i = model.getRowCount() - 1; i >= 0; i--) {
+		List<TeacherReadOnlyDTO> readOnlyDTOS = new ArrayList<>();
+		TeacherReadOnlyDTO readOnlyDTO;
+
+		try {
+			String searchStr = lastnameSearchText.getText().trim();
+
+			List<Teacher> teachers = teacherService.getTeachersByLastname(searchStr);
+			for (Teacher teacher : teachers) {
+				readOnlyDTO = mapToReadOnlyDTO(teacher);
+				readOnlyDTOS.add(readOnlyDTO);
+			}
+
+			for (int i = model.getRowCount() - 1; i >=0; i--) {
 				model.removeRow(i);
 			}
-			
-			while (rs.next()) {
+
+			for (TeacherReadOnlyDTO teacherReadOnlyDTO : readOnlyDTOS) {
 				vector = new Vector<>(3);
-				vector.add(rs.getString("id"));
-				vector.add(rs.getString("firstname"));
-				vector.add(rs.getString("lastname"));
-				
+				vector.add(String.valueOf(teacherReadOnlyDTO.getId()));
+				vector.add(teacherReadOnlyDTO.getFirstname());
+				vector.add(teacherReadOnlyDTO.getLastname());
 				model.addRow(vector);
-			}		
-		} catch (SQLException e) {
-			//e.printStackTrace();
-			JOptionPane.showMessageDialog(null,  "Select error", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+
+		} catch (TeacherDAOException e) {
+			//	e.printStackTrace();
+			JOptionPane.showMessageDialog(null,  e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -343,5 +361,9 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 		if (!inputLastname.equals("")) {
 			errorLastname.setText("");
 		}
+	}
+
+	private TeacherReadOnlyDTO mapToReadOnlyDTO(Teacher teacher) {
+		return new TeacherReadOnlyDTO(teacher.getId(), teacher.getFirstname(), teacher.getLastname());
 	}
 }
