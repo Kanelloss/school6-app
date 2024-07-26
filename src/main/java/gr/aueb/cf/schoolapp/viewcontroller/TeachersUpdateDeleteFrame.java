@@ -229,17 +229,16 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 				String lastnameMessage;
 				Teacher teacher;
 
-
 				if (idText.getText().trim().isEmpty()) return;
-
+				// Data Binding
 				try {
 					TeacherUpdateDTO updateDTO = new TeacherUpdateDTO();
 					updateDTO.setId(Integer.parseInt(idText.getText().trim()));
 					updateDTO.setFirstname(firstnameText.getText().trim());
 					updateDTO.setLastname(lastnameText.getText().trim());
-
+					// Validate
 					errors = TeacherValidator.validate(updateDTO);
-
+					// If errors, assign messages to UI
 					if (!errors.isEmpty()) {
 						firstnameMessage = errors.getOrDefault("firstname", "");
 						lastnameMessage = errors.getOrDefault("lastname", "");
@@ -248,14 +247,18 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 						errorLastname.setText(lastnameMessage);
 						return;
 					}
-
+					// On validation success, call the update service
 					teacher = teacherService.updateTeacher(updateDTO);
+
+					// Results mapped to ReadOnlyDTO
 					TeacherReadOnlyDTO readOnlyDTO = mapToReadOnlyDTO(teacher);
 
+					// Feedback
 					JOptionPane.showMessageDialog(null, "Teacher with id: " + readOnlyDTO.getId() + " updated successfully", "Update", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (TeacherDAOException | TeacherNotFoundException e1) {
 					e1.printStackTrace();
+					// On failure, show  message
 					JOptionPane.showMessageDialog(null,  e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				
@@ -269,26 +272,21 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 		deleteBtn = new JButton("Διαγραφή");
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				String sql = "DELETE FROM teachers WHERE id = ?";
-				try (Connection conn = DBUtil.getConnection();
-						PreparedStatement ps = conn.prepareStatement(sql)) {
-					
+				int response;
+
+				try {
+					if (idText.getText().trim().isEmpty()) return;
 					int inputId = Integer.parseInt(idText.getText().trim());
-					ps.setInt(1, inputId);
-					
-					int answer = JOptionPane.showConfirmDialog(null, "Είστε σίγουρη/ος", "Διαγραφή", 
-							JOptionPane.YES_NO_OPTION);
-					if (answer == JOptionPane.YES_OPTION) {
-						int rowsAffected = ps.executeUpdate();
-						JOptionPane.showMessageDialog(null, rowsAffected + " γρααμμή/ες διαγράφηκαν", "Διαγραφή", 
-								JOptionPane.INFORMATION_MESSAGE);
-					} else {
-						return;
-					}							
-				} catch (SQLException ex) {
-					//ex.printStackTrace();
-					JOptionPane.showMessageDialog(null,  "Delete error", "Error", JOptionPane.ERROR_MESSAGE);
+
+					response = JOptionPane.showConfirmDialog(null, "Είστε σίγουρος/η;", "Warning", JOptionPane.YES_NO_OPTION);
+					if (response == JOptionPane.YES_OPTION) {
+						teacherService.deleteTeacher(inputId);
+						JOptionPane.showMessageDialog(null, "Teacher was deleted successfully", "Delete", JOptionPane.INFORMATION_MESSAGE);
+					}
+
+				} catch (TeacherDAOException | TeacherNotFoundException ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(null,  ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
