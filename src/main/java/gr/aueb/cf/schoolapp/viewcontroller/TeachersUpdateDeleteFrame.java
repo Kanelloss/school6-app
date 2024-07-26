@@ -81,6 +81,7 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
+				lastnameSearchText.setText("");
 				buildTable();	// initial rendering
 				idText.setText("");
 				firstnameText.setText("");
@@ -88,6 +89,7 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 			}
 			@Override
 			public void windowActivated(WindowEvent e) {
+				lastnameSearchText.setText("");
 				buildTable();	// refresh after update / delete
 				idText.setText("");
 				firstnameText.setText("");
@@ -278,10 +280,11 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 					if (idText.getText().trim().isEmpty()) return;
 					int inputId = Integer.parseInt(idText.getText().trim());
 
-					response = JOptionPane.showConfirmDialog(null, "Είστε σίγουρος/η;", "Warning", JOptionPane.YES_NO_OPTION);
+					response = JOptionPane.showConfirmDialog(null, "Είστε σίγουρος/η;", "Προσοχή", JOptionPane.YES_NO_OPTION);
 					if (response == JOptionPane.YES_OPTION) {
 						teacherService.deleteTeacher(inputId);
-						JOptionPane.showMessageDialog(null, "Teacher was deleted successfully", "Delete", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Επιτυχής Διαγραφή", "Delete", JOptionPane.INFORMATION_MESSAGE);
+
 					}
 
 				} catch (TeacherDAOException | TeacherNotFoundException ex) {
