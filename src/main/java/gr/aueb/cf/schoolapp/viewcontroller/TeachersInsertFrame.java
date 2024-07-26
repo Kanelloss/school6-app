@@ -162,17 +162,19 @@ public class TeachersInsertFrame extends JFrame {
 						firstnameMessage = errors.getOrDefault("firstname", "");
 						lastnameMessage = errors.getOrDefault("lastname", "");
 
-						if (!firstnameMessage.isEmpty()) {
-							errorFirstname.setText(firstnameMessage);
-						}
+//						if (!firstnameMessage.isEmpty()) {
+//							errorFirstname.setText(firstnameMessage);
+//						}
+
+						errorFirstname.setText(firstnameMessage);
 
 						if (!lastnameMessage.isEmpty()) {
 							errorLastname.setText(lastnameMessage);
 						}
 
-						if (firstnameMessage.isEmpty()) {
-							errorFirstname.setText("");
-						}
+//						if (firstnameMessage.isEmpty()) {
+//							errorFirstname.setText("");
+//						}
 
 						if (lastnameMessage.isEmpty()) {
 							errorLastname.setText("");
