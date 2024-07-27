@@ -1,21 +1,30 @@
 package gr.aueb.cf.schoolapp.viewcontroller;
 
 import gr.aueb.cf.schoolapp.Main;
+import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
+import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
 import gr.aueb.cf.schoolapp.service.IStudentService;
-import gr.aueb.cf.schoolapp.service.StudentServiceImpl;
+import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
+import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
-import gr.aueb.cf.schoolapp.dao.StudentDAOImpl;
-import gr.aueb.cf.schoolapp.service.exceptions.StudentDAOException;
+import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentInsertDTO;
 import gr.aueb.cf.schoolapp.validator.StudentValidator;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 public class StudentsInsertFrame extends JFrame {
+
+    // Wiring
+
+    private final IStudentDAO studentDAO = new IStudentDAOImpl();
+    private final IStudentService studentService = new IStudentServiceImpl(studentDAO);
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -24,8 +33,8 @@ public class StudentsInsertFrame extends JFrame {
     private JTextField lastnameText;
     private JLabel errorFirstname;
     private JLabel errorLastname;
-    private final IStudentDAO studentDAO = new StudentDAOImpl();
-    private final IStudentService studentService = new StudentServiceImpl(studentDAO);
+
+
 
     public StudentsInsertFrame() {
         setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
