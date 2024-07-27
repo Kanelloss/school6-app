@@ -283,13 +283,13 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 					response = JOptionPane.showConfirmDialog(null, "Είστε σίγουρος/η;", "Προσοχή", JOptionPane.YES_NO_OPTION);
 					if (response == JOptionPane.YES_OPTION) {
 						teacherService.deleteTeacher(inputId);
-						JOptionPane.showMessageDialog(null, "Επιτυχής Διαγραφή", "Delete", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Επιτυχής Διαγραφή", "Διαγραφή", JOptionPane.INFORMATION_MESSAGE);
 
 					}
 
 				} catch (TeacherDAOException | TeacherNotFoundException ex) {
 					ex.printStackTrace();
-					JOptionPane.showMessageDialog(null,  ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,  ex.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
