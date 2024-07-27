@@ -1,18 +1,22 @@
 package gr.aueb.cf.schoolapp;
 
-import gr.aueb.cf.schoolapp.viewcontroller.MainMenuFrame;
-import gr.aueb.cf.schoolapp.viewcontroller.TeachersInsertFrame;
-import gr.aueb.cf.schoolapp.viewcontroller.TeachersMenuFrame;
-import gr.aueb.cf.schoolapp.viewcontroller.TeachersUpdateDeleteFrame;
+import gr.aueb.cf.schoolapp.viewcontroller.*;
 
 import java.awt.EventQueue;
 
 public class Main {
 
 	private final static MainMenuFrame mainMenuFrame = new MainMenuFrame();
+
+	// Teachers Frames
 	private final static TeachersMenuFrame teachersMenuFrame = new TeachersMenuFrame();
 	private final static TeachersInsertFrame teachersInsertFrame = new TeachersInsertFrame();
 	private final static TeachersUpdateDeleteFrame teachersUpdateDeleteFrame = new TeachersUpdateDeleteFrame();
+
+	// Students Frames
+	private final static StudentsMenuFrame studentsMenuFrame = new StudentsMenuFrame();
+	private final static StudentsInsertFrame studentsInsertFrame = new StudentsInsertFrame();
+	private final static StudentsUpdateDeleteFrame studentsUpdateDeleteFrame = new StudentsUpdateDeleteFrame();
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -53,4 +57,9 @@ public class Main {
 		return teachersUpdateDeleteFrame;
 	}
 
+	public static StudentsMenuFrame getStudentsMenuFrame() { return studentsMenuFrame; }
+
+	public static StudentsInsertFrame getStudentsInsertFrame() { return studentsInsertFrame; }
+
+	public static StudentsUpdateDeleteFrame getStudentsUpdateDeleteFrame() { return studentsUpdateDeleteFrame; }
 }
