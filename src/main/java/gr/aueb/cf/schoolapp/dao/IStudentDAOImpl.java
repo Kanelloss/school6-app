@@ -128,16 +128,17 @@ public class IStudentDAOImpl implements IStudentDAO{
             // logging
 
             while (rs.next()) {
-                
+                Student student = new Student(
+                        rs.getInt("id"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"));
+                students.add(student);
             }
-
-
-
-
+            return students;
         } catch (SQLException e) {
             e.printStackTrace();
             // logging
-            throw new StudentDAOException("SQL Error in selecting student with id: " + id);
+            throw new StudentDAOException("SQL error in selecting students");
         }
     }
 }
