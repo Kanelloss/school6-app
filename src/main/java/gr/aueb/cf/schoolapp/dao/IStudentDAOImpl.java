@@ -118,7 +118,7 @@ public class IStudentDAOImpl implements IStudentDAO{
     public List<Student> getByLastName(String lastname) throws StudentDAOException {
         List<Student> students = new ArrayList<>();     // isEmpty == true
         ResultSet rs;
-        String sql = "SELECT * FROM teachers WHERE lastname LIKE ?";
+        String sql = "SELECT * FROM students WHERE lastname LIKE ?";
 
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {

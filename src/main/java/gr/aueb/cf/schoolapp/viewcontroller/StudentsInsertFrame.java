@@ -33,7 +33,6 @@ public class StudentsInsertFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JTextField idText;
     private JTextField firstnameText;
     private JTextField lastnameText;
     private JLabel errorFirstname;
@@ -65,11 +64,6 @@ public class StudentsInsertFrame extends JFrame {
         idLabel.setForeground(new Color(0, 0, 255));
         idLabel.setBounds(30, 30, 50, 14);
         contentPane.add(idLabel);
-
-        idText = new JTextField();
-        idText.setBounds(100, 27, 150, 20);
-        contentPane.add(idText);
-        idText.setColumns(10);
 
         JLabel firstnameLabel = new JLabel("Όνομα");
         firstnameLabel.setForeground(new Color(0, 0, 255));

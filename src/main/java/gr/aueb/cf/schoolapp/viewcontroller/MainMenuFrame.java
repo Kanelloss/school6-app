@@ -87,8 +87,16 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(teachersLabel);
 		
 		JButton studentsBtn = new JButton("...");
+		studentsBtn.setSelectedIcon(null);
+		studentsBtn.setIcon(null);
 		studentsBtn.setFont(new Font("Tahoma", Font.BOLD, 12));
 		studentsBtn.setForeground(new Color(51, 102, 255));
+		studentsBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Main.getStudentsMenuFrame().setVisible(true);
+				Main.getMainMenuFrame().setEnabled(false);
+			}
+		});
 		studentsBtn.setBackground(new Color(255, 255, 255));
 		studentsBtn.setBounds(10, 222, 48, 50);
 		contentPane.add(studentsBtn);
