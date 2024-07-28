@@ -3,6 +3,11 @@ package gr.aueb.cf.schoolapp.viewcontroller;
 import gr.aueb.cf.schoolapp.Main;
 import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
+import gr.aueb.cf.schoolapp.dto.StudentReadOnlyDTO;
+import gr.aueb.cf.schoolapp.dto.TeacherInsertDTO;
+import gr.aueb.cf.schoolapp.dto.TeacherReadOnlyDTO;
+import gr.aueb.cf.schoolapp.model.Student;
+import gr.aueb.cf.schoolapp.model.Teacher;
 import gr.aueb.cf.schoolapp.service.IStudentService;
 import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
 import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
@@ -11,18 +16,18 @@ import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentInsertDTO;
 import gr.aueb.cf.schoolapp.validator.StudentValidator;
+import gr.aueb.cf.schoolapp.validator.TeacherValidator;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Map;
 
 public class StudentsInsertFrame extends JFrame {
 
     // Wiring
-
     private final IStudentDAO studentDAO = new IStudentDAOImpl();
     private final IStudentService studentService = new IStudentServiceImpl(studentDAO);
 
@@ -38,7 +43,15 @@ public class StudentsInsertFrame extends JFrame {
 
     public StudentsInsertFrame() {
         setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
-        setTitle("Εισαγωγή Μαθητή");
+        setTitle("Εισαγωγή Μαθητών");
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                firstnameText.setText("");
+                lastnameText.setText("");
+            }
+        });
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
@@ -65,6 +78,22 @@ public class StudentsInsertFrame extends JFrame {
         contentPane.add(firstnameLabel);
 
         firstnameText = new JTextField();
+        firstnameText.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String inputFirstname;
+                inputFirstname = firstnameText.getText().trim();
+
+                if (inputFirstname.equals("")) {
+                    errorFirstname.setText("Το όνομα είναι υποχρεωτικό");
+                }
+
+                if (!inputFirstname.equals("")) {
+                    errorFirstname.setText("");
+                }
+            }
+        });
+        firstnameText.setFont(new Font("Tahoma", Font.PLAIN, 12));
         firstnameText.setBounds(100, 67, 150, 20);
         contentPane.add(firstnameText);
         firstnameText.setColumns(10);
@@ -76,9 +105,31 @@ public class StudentsInsertFrame extends JFrame {
         contentPane.add(lastnameLabel);
 
         lastnameText = new JTextField();
+        lastnameText.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String inputLastname;
+                inputLastname = lastnameText.getText().trim();
+
+                if (inputLastname.equals("")) {
+                    errorLastname.setText("Το επώνυμο είναι υποχρεωτικό");
+                }
+
+                if (!inputLastname.equals("")) {
+                    errorLastname.setText("");
+                }
+
+            }
+        });
         lastnameText.setBounds(100, 107, 150, 20);
         contentPane.add(lastnameText);
         lastnameText.setColumns(10);
+
+        JPanel panel = new JPanel();
+        panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+        panel.setBounds(21, 23, 354, 179);
+        contentPane.add(panel);
+        panel.setLayout(null);
 
         errorFirstname = new JLabel("");
         errorFirstname.setForeground(new Color(255, 0, 0));
@@ -93,25 +144,51 @@ public class StudentsInsertFrame extends JFrame {
         JButton insertBtn = new JButton("Εισαγωγή");
         insertBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String firstname = firstnameText.getText().trim();
-                String lastname = lastnameText.getText().trim();
 
-                // Validate
-                Map<String, String> errors = StudentValidator.validate(new StudentInsertDTO(idText.getText().trim(), firstname, lastname));
+                Map<String, String> errors;
+                StudentInsertDTO insertDTO = new StudentInsertDTO();
+                String firstnameMessage;
+                String lastnameMessage;
+                Student student;
 
-                errorFirstname.setText(errors.getOrDefault("firstname", ""));
-                errorLastname.setText(errors.getOrDefault("lastname", ""));
+                try {
 
-                if (errors.isEmpty()) {
-                    try {
-                        studentService.addStudent(new StudentInsertDTO(idText.getText().trim(), firstname, lastname));
-                        JOptionPane.showMessageDialog(null, "Μαθητής προστέθηκε επιτυχώς", "Εισαγωγή", JOptionPane.INFORMATION_MESSAGE);
-                        idText.setText("");
-                        firstnameText.setText("");
-                        lastnameText.setText("");
-                    } catch (StudentDAOException ex) {
-                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+                    // Data Binding
+                    insertDTO.setFirstname(firstnameText.getText().trim());
+                    insertDTO.setLastname(lastnameText.getText().trim());
+
+                    // Validation
+                    errors = TeacherValidator.validate(insertDTO);
+
+                    if (!errors.isEmpty()) {
+                        firstnameMessage = errors.getOrDefault("firstname", "");
+                        lastnameMessage = errors.getOrDefault("lastname", "");
+
+
+                        errorFirstname.setText(firstnameMessage);
+
+                        if (!lastnameMessage.isEmpty()) {
+                            errorLastname.setText(lastnameMessage);
+                        }
+
+                        if (lastnameMessage.isEmpty()) {
+                            errorLastname.setText("");
+                        }
+
+                        return;
+
                     }
+
+                    student = studentService.insertStudent(insertDTO);
+                    StudentReadOnlyDTO readOnlyDTO = mapToReadOnlyDTO(student);
+
+                    JOptionPane.showMessageDialog(null, "Ο μαθητής με επίθετο: " +
+                                    readOnlyDTO.getLastname() + " εισήχθη επιτυχώς",
+                            "Εισαγωγή μαθητή", JOptionPane.INFORMATION_MESSAGE);
+
+                } catch (StudentDAOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Σφάλμα Εισαγωγής", "Προσοχή", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -131,6 +208,10 @@ public class StudentsInsertFrame extends JFrame {
         closeBtn.setFont(new Font("Tahoma", Font.PLAIN, 12));
         closeBtn.setBounds(260, 150, 100, 30);
         contentPane.add(closeBtn);
+    }
+
+    private StudentReadOnlyDTO mapToReadOnlyDTO(Student student) {
+        return new StudentReadOnlyDTO(student.getId(),student.getFirstname(),student.getLastname());
     }
 }
 

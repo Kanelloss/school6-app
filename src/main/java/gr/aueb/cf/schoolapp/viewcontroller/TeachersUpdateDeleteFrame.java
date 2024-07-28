@@ -1,10 +1,6 @@
 package gr.aueb.cf.schoolapp.viewcontroller;
 
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +50,7 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 	private final ITeacherDAO teacherDAO = new TeacherDAOImpl();
 	private final ITeacherService teacherService = new TeacherServiceImpl(teacherDAO);
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable teachersTable;
@@ -232,14 +229,17 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 				Teacher teacher;
 
 				if (idText.getText().trim().isEmpty()) return;
+
 				// Data Binding
 				try {
 					TeacherUpdateDTO updateDTO = new TeacherUpdateDTO();
 					updateDTO.setId(Integer.parseInt(idText.getText().trim()));
 					updateDTO.setFirstname(firstnameText.getText().trim());
 					updateDTO.setLastname(lastnameText.getText().trim());
+
 					// Validate
 					errors = TeacherValidator.validate(updateDTO);
+
 					// If errors, assign messages to UI
 					if (!errors.isEmpty()) {
 						firstnameMessage = errors.getOrDefault("firstname", "");
@@ -256,12 +256,13 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 					TeacherReadOnlyDTO readOnlyDTO = mapToReadOnlyDTO(teacher);
 
 					// Feedback
-					JOptionPane.showMessageDialog(null, "Teacher with id: " + readOnlyDTO.getId() + " updated successfully", "Update", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Ο καθηγητής με id: "
+							+ readOnlyDTO.getId() + " ενημερώθηκε επιτυχώς", "Ενημέρωση", JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (TeacherDAOException | TeacherNotFoundException e1) {
 					e1.printStackTrace();
 					// On failure, show  message
-					JOptionPane.showMessageDialog(null,  e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,  e1.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}

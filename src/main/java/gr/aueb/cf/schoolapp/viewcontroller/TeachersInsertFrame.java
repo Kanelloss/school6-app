@@ -193,10 +193,6 @@ public class TeachersInsertFrame extends JFrame {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null,"Insertion Error","Error",JOptionPane.ERROR_MESSAGE);
 				}
-
-
-									
-
 			}
 		});
 		insertBtn.setForeground(new Color(0, 0, 255));

@@ -5,10 +5,10 @@ import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
 import gr.aueb.cf.schoolapp.service.IStudentService;
 import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
-import gr.aueb.cf.schoolapp.service.StudentServiceImpl;
+import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
-import gr.aueb.cf.schoolapp.dao.StudentDAOImpl;
-import gr.aueb.cf.schoolapp.service.exceptions.StudentDAOException;
+import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
+import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentReadOnlyDTO;
 import gr.aueb.cf.schoolapp.dto.StudentUpdateDTO;
@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Vector;
 
 public class StudentsUpdateDeleteFrame extends JFrame {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTable studentsTable;
@@ -53,6 +55,24 @@ public class StudentsUpdateDeleteFrame extends JFrame {
     public StudentsUpdateDeleteFrame() {
         setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));
         setTitle("Ενημέρωση / Διαγραφή Μαθητή");
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                lastnameSearchText.setText("");
+                buildTable();	// initial rendering
+                idText.setText("");
+                firstnameText.setText("");
+                lastnameText.setText("");
+            }
+            @Override
+            public void windowActivated(WindowEvent e) {
+                lastnameSearchText.setText("");
+                buildTable();	// refresh after update / delete
+                idText.setText("");
+                firstnameText.setText("");
+                lastnameText.setText("");
+            }
+        });
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 870, 632);
         contentPane = new JPanel();
@@ -172,6 +192,7 @@ public class StudentsUpdateDeleteFrame extends JFrame {
         updateBtn = new JButton("Ενημέρωση");
         updateBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 Map<String, String> errors;
                 String firstnameMessage;
                 String lastnameMessage;
@@ -179,14 +200,17 @@ public class StudentsUpdateDeleteFrame extends JFrame {
 
                 if (idText.getText().trim().isEmpty()) return;
 
+                // Data Binding
                 try {
                     StudentUpdateDTO updateDTO = new StudentUpdateDTO();
                     updateDTO.setId(Integer.parseInt(idText.getText().trim()));
                     updateDTO.setFirstname(firstnameText.getText().trim());
                     updateDTO.setLastname(lastnameText.getText().trim());
 
+                    // Validate
                     errors = StudentValidator.validate(updateDTO);
 
+                    // If errors, assign messages to UI
                     if (!errors.isEmpty()) {
                         firstnameMessage = errors.getOrDefault("firstname", "");
                         lastnameMessage = errors.getOrDefault("lastname", "");
@@ -196,14 +220,20 @@ public class StudentsUpdateDeleteFrame extends JFrame {
                         return;
                     }
 
+                    // On validation success, call the update service
                     student = studentService.updateStudent(updateDTO);
-                    StudentReadOnlyDTO readOnlyDTO = mapToReadOnlyDTO(student);
 
-                    JOptionPane.showMessageDialog(null, "Student with id: " + readOnlyDTO.getId() + " updated successfully", "Update", JOptionPane.INFORMATION_MESSAGE);
+                    // Results mapped to ReadOnlyDTO
+                    StudentReadOnlyDTO readOnlyDTO = mapToReadOnlyDTO(student);
+                    // Feedback
+                    JOptionPane.showMessageDialog(null, "Ο μαθητής με id: " + readOnlyDTO.getId()
+                            + " ενημερώθηκε επιτυχώς", "Ενημέρωση", JOptionPane.INFORMATION_MESSAGE);
 
                 } catch (StudentDAOException | StudentNotFoundException e1) {
                     e1.printStackTrace();
-                    JOptionPane.showMessageDialog(null, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    // On failure, show message
+                    JOptionPane.showMessageDialog(null, e1.getMessage(), "Σφάλμα",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -252,19 +282,32 @@ public class StudentsUpdateDeleteFrame extends JFrame {
     }
 
     private void buildTable() {
-        model.setRowCount(0);
-        String lastname = lastnameSearchText.getText().trim();
+        Vector<String> vector;
+        List<StudentReadOnlyDTO> readOnlyDTOS = new ArrayList<>();
+        StudentReadOnlyDTO readOnlyDTO;
+
+
+
 
         try {
-            List<Student> students = studentService.getStudentsByLastname(lastname);
-            List<StudentReadOnlyDTO> dtos = new ArrayList<>();
+            String lastname = lastnameSearchText.getText().trim();
 
+            List<Student> students = studentService.getStudentsByLastname(lastname);
             for (Student student : students) {
-                dtos.add(mapToReadOnlyDTO(student));
+                readOnlyDTO = mapToReadOnlyDTO(student);
+                readOnlyDTOS.add(readOnlyDTO);
             }
 
-            for (StudentReadOnlyDTO dto : dtos) {
-                model.addRow(new Object[]{dto.getId(), dto.getFirstname(), dto.getLastname()});
+            for (int i = model.getRowCount() - 1; i >=0; i--) {
+                model.removeRow(i);
+            }
+
+            for (StudentReadOnlyDTO studentReadOnlyDTO : readOnlyDTOS) {
+                vector = new Vector<>(3);
+                vector.add(String.valueOf(studentReadOnlyDTO.getId()));
+                vector.add(studentReadOnlyDTO.getFirstname());
+                vector.add(studentReadOnlyDTO.getLastname());
+                model.addRow(vector);
             }
 
         } catch (StudentDAOException e) {
@@ -273,24 +316,28 @@ public class StudentsUpdateDeleteFrame extends JFrame {
         }
     }
 
-    private StudentReadOnlyDTO mapToReadOnlyDTO(Student student) {
-        return new StudentReadOnlyDTO(student.getId(), student.getFirstname(), student.getLastname());
-    }
+    private void validateFirstname(String inputFirstname) {
+        if (inputFirstname.equals("")) {
+            errorFirstname.setText("Το όνομα είναι υποχρεωτικό");
+        }
 
-    private void validateFirstname(String firstname) {
-        if (!StudentValidator.isValidFirstname(firstname)) {
-            errorFirstname.setText("Invalid firstname");
-        } else {
+        if (!inputFirstname.equals("")) {
             errorFirstname.setText("");
         }
     }
 
-    private void validateLastname(String lastname) {
-        if (!StudentValidator.isValidLastname(lastname)) {
-            errorLastname.setText("Invalid lastname");
-        } else {
+    private void validateLastname(String inputLastname) {
+        if (inputLastname.equals("")) {
+            errorLastname.setText("Το επώνυμο είναι υποχρεωτικό");
+        }
+
+        if (!inputLastname.equals("")) {
             errorLastname.setText("");
         }
+    }
+
+    private StudentReadOnlyDTO mapToReadOnlyDTO(Student student) {
+        return new StudentReadOnlyDTO(student.getId(), student.getFirstname(), student.getLastname());
     }
 }
 
