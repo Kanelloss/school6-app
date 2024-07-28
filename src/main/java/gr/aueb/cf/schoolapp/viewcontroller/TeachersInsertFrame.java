@@ -132,12 +132,12 @@ public class TeachersInsertFrame extends JFrame {
 		
 		errorFirstname = new JLabel("");
 		errorFirstname.setForeground(new Color(255, 0, 0));
-		errorFirstname.setBounds(64, 66, 258, 25);
+		errorFirstname.setBounds(64, 66, 300, 25);
 		panel.add(errorFirstname);
 		
 		errorLastname = new JLabel("");
 		errorLastname.setForeground(Color.RED);
-		errorLastname.setBounds(64, 129, 258, 25);
+		errorLastname.setBounds(64, 129, 300, 25);
 		panel.add(errorLastname);
 		
 		JButton insertBtn = new JButton("Εισαγωγή");

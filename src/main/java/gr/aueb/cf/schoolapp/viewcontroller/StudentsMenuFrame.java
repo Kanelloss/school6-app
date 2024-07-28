@@ -18,6 +18,7 @@ public class StudentsMenuFrame extends JFrame {
         setTitle("Μενού Μαθητών");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 427, 358);
+        setLocationRelativeTo(null); // Center the window
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 

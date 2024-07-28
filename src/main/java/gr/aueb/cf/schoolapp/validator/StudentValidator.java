@@ -15,19 +15,19 @@ public class StudentValidator<T> {
         Map<String, String> errors = new HashMap<>();
 
         if (dto.getFirstname().length() < 2 || dto.getFirstname().length() > 32) {
-            errors.put("firstname", "Firstname should be between 2 and 32 characters");
+            errors.put("firstname", "Το όνομα πρέπει να περιέχει 2-32 χαρακτήρες");
         }
 
         if (dto.getLastname().length() < 2 || dto.getLastname().length() > 32) {
-            errors.put("lastname", "Lastname should be between 2 and 32 characters");
+            errors.put("lastname", "Το επώνυμο πρέπει να περιέχει 2-32 χαρακτήρες");
         }
 
         if (dto.getFirstname().matches("^.*\\s+.*$")) {
-            errors.put("firstname", "Firstname should not include whitespaces");
+            errors.put("firstname", "Δεν επιτρέπονται κενά");
         }
 
         if (dto.getLastname().matches("^.*\\s+.*$")) {
-            errors.put("lastname", "Lastname should not include whitespaces");
+            errors.put("lastname", "Δεν επιτρέπονται κενά");
         }
 
         // logic validation

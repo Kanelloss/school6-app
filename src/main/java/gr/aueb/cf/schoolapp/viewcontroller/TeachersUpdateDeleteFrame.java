@@ -204,13 +204,15 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 		lastnameText.setColumns(10);
 		
 		errorFirstname = new JLabel("");
+		errorFirstname.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		errorFirstname.setForeground(new Color(255, 0, 0));
-		errorFirstname.setBounds(556, 147, 177, 20);
+		errorFirstname.setBounds(556, 147, 300, 20);
 		contentPane.add(errorFirstname);
 		
 		errorLastname = new JLabel("");
+		errorLastname.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		errorLastname.setForeground(new Color(255, 0, 0));
-		errorLastname.setBounds(556, 203, 177, 20);
+		errorLastname.setBounds(556, 203, 300, 15);
 		contentPane.add(errorLastname);
 		
 		panel = new JPanel();

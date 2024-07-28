@@ -16,7 +16,6 @@ import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentInsertDTO;
 import gr.aueb.cf.schoolapp.validator.StudentValidator;
-import gr.aueb.cf.schoolapp.validator.TeacherValidator;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -53,22 +52,17 @@ public class StudentsInsertFrame extends JFrame {
         });
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 450, 300);
+        setLocationRelativeTo(null); // Center the window
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel idLabel = new JLabel("Κωδικός");
-        idLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        idLabel.setForeground(new Color(0, 0, 255));
-        idLabel.setBounds(30, 30, 50, 14);
-        contentPane.add(idLabel);
-
         JLabel firstnameLabel = new JLabel("Όνομα");
         firstnameLabel.setForeground(new Color(0, 0, 255));
         firstnameLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        firstnameLabel.setBounds(30, 70, 50, 14);
+        firstnameLabel.setBounds(42, 60, 41, 25);
         contentPane.add(firstnameLabel);
 
         firstnameText = new JTextField();
@@ -88,14 +82,14 @@ public class StudentsInsertFrame extends JFrame {
             }
         });
         firstnameText.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        firstnameText.setBounds(100, 67, 150, 20);
+        firstnameText.setBounds(85, 60, 258, 25);
         contentPane.add(firstnameText);
         firstnameText.setColumns(10);
 
         JLabel lastnameLabel = new JLabel("Επώνυμο");
         lastnameLabel.setForeground(new Color(0, 0, 255));
         lastnameLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        lastnameLabel.setBounds(30, 110, 60, 14);
+        lastnameLabel.setBounds(32, 123, 55, 14);
         contentPane.add(lastnameLabel);
 
         lastnameText = new JTextField();
@@ -115,7 +109,7 @@ public class StudentsInsertFrame extends JFrame {
 
             }
         });
-        lastnameText.setBounds(100, 107, 150, 20);
+        lastnameText.setBounds(85, 118, 258, 25);
         contentPane.add(lastnameText);
         lastnameText.setColumns(10);
 
@@ -127,13 +121,13 @@ public class StudentsInsertFrame extends JFrame {
 
         errorFirstname = new JLabel("");
         errorFirstname.setForeground(new Color(255, 0, 0));
-        errorFirstname.setBounds(100, 87, 200, 20);
-        contentPane.add(errorFirstname);
+        errorFirstname.setBounds(64, 66, 300, 25);
+        panel.add(errorFirstname);
 
         errorLastname = new JLabel("");
         errorLastname.setForeground(new Color(255, 0, 0));
-        errorLastname.setBounds(100, 127, 200, 20);
-        contentPane.add(errorLastname);
+        errorLastname.setBounds(64, 129, 300, 25);
+        panel.add(errorLastname);
 
         JButton insertBtn = new JButton("Εισαγωγή");
         insertBtn.addActionListener(new ActionListener() {
@@ -152,7 +146,7 @@ public class StudentsInsertFrame extends JFrame {
                     insertDTO.setLastname(lastnameText.getText().trim());
 
                     // Validation
-                    errors = TeacherValidator.validate(insertDTO);
+                    errors = StudentValidator.validate(insertDTO);
 
                     if (!errors.isEmpty()) {
                         firstnameMessage = errors.getOrDefault("firstname", "");
@@ -187,8 +181,8 @@ public class StudentsInsertFrame extends JFrame {
             }
         });
         insertBtn.setForeground(new Color(0, 0, 255));
-        insertBtn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        insertBtn.setBounds(100, 150, 150, 30);
+        insertBtn.setFont(new Font("Tahoma", Font.BOLD, 12));
+        insertBtn.setBounds(156, 213, 109, 39);
         contentPane.add(insertBtn);
 
         JButton closeBtn = new JButton("Κλείσιμο");
@@ -199,8 +193,8 @@ public class StudentsInsertFrame extends JFrame {
             }
         });
         closeBtn.setForeground(new Color(0, 0, 255));
-        closeBtn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        closeBtn.setBounds(260, 150, 100, 30);
+        closeBtn.setFont(new Font("Tahoma", Font.BOLD, 12));
+        closeBtn.setBounds(266, 213, 109, 39);
         contentPane.add(closeBtn);
     }
 

@@ -75,6 +75,7 @@ public class StudentsUpdateDeleteFrame extends JFrame {
         });
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(100, 100, 870, 632);
+        setLocationRelativeTo(null); // Center the window
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -174,15 +175,15 @@ public class StudentsUpdateDeleteFrame extends JFrame {
         lastnameText.setColumns(10);
 
         errorFirstname = new JLabel("");
-        errorFirstname.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        errorFirstname.setFont(new Font("Tahoma", Font.PLAIN, 10));
         errorFirstname.setForeground(new Color(255, 0, 0));
-        errorFirstname.setBounds(556, 147, 200, 20);
+        errorFirstname.setBounds(556, 147, 300, 20);
         contentPane.add(errorFirstname);
 
         errorLastname = new JLabel("");
-        errorLastname.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        errorLastname.setFont(new Font("Tahoma", Font.PLAIN, 10));
         errorLastname.setForeground(new Color(255, 0, 0));
-        errorLastname.setBounds(556, 203, 200, 20);
+        errorLastname.setBounds(556, 203, 300, 15);
         contentPane.add(errorLastname);
 
         panel = new JPanel();
