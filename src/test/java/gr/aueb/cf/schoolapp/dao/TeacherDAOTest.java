@@ -76,13 +76,13 @@ class TeacherDAOTest {
 
     @Test
     void getTeacherByIdNegative() throws TeacherDAOException {
-        Teacher teacher = teacherDAO.getById(5);
+        Teacher teacher = teacherDAO.getById(15);
         assertNull(teacher);
     }
 
     @Test
     void getTeacherByLastname() throws TeacherDAOException {
-        List<Teacher> teachers = teacherDAO.getByLastName("Androu");
+        List<Teacher> teachers = teacherDAO.getByLastName("Androutsos");
         assertEquals(1, teachers.size());
     }
 
