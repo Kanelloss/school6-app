@@ -112,7 +112,7 @@ public class TeachersUpdateDeleteFrame extends JFrame {
 		});
 		teachersTable.setModel(new DefaultTableModel(
 			new Object[][] {},
-			new String[] {"Κωδικός", "Όνομα", "Επώνυνο"}
+			new String[] {"Κωδικός", "Όνομα", "Επώνυμο"}
 		));
 		
 		model = (DefaultTableModel) teachersTable.getModel();
