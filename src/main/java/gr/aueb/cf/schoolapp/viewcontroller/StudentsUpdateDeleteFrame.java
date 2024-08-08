@@ -4,7 +4,7 @@ import gr.aueb.cf.schoolapp.Main;
 import gr.aueb.cf.schoolapp.dao.StudentDAOImpl;
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
 import gr.aueb.cf.schoolapp.service.IStudentService;
-import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
+import gr.aueb.cf.schoolapp.service.StudentServiceImpl;
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentReadOnlyDTO;
@@ -47,7 +47,7 @@ public class StudentsUpdateDeleteFrame extends JFrame {
     private JButton deleteBtn;
     private JButton closeBtn;
     private final IStudentDAO studentDAO = new StudentDAOImpl();
-    private final IStudentService studentService = new IStudentServiceImpl(studentDAO);
+    private final IStudentService studentService = new StudentServiceImpl(studentDAO);
 
     public StudentsUpdateDeleteFrame() {
         setIconImage(Toolkit.getDefaultToolkit().getImage(Thread.currentThread().getContextClassLoader().getResource("eduv2.png")));

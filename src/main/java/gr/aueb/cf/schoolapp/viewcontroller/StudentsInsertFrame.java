@@ -6,7 +6,7 @@ import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
 import gr.aueb.cf.schoolapp.dto.StudentReadOnlyDTO;
 import gr.aueb.cf.schoolapp.model.Student;
 import gr.aueb.cf.schoolapp.service.IStudentService;
-import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
+import gr.aueb.cf.schoolapp.service.StudentServiceImpl;
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
 import gr.aueb.cf.schoolapp.dto.StudentInsertDTO;
 import gr.aueb.cf.schoolapp.validator.StudentValidator;
@@ -22,7 +22,7 @@ public class StudentsInsertFrame extends JFrame {
 
     // Wiring
     private final IStudentDAO studentDAO = new StudentDAOImpl();
-    private final IStudentService studentService = new IStudentServiceImpl(studentDAO);
+    private final IStudentService studentService = new StudentServiceImpl(studentDAO);
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;

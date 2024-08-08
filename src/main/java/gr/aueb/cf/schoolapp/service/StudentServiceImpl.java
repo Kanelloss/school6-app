@@ -2,20 +2,18 @@ package gr.aueb.cf.schoolapp.service;
 
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
-import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
 import gr.aueb.cf.schoolapp.dto.StudentInsertDTO;
 import gr.aueb.cf.schoolapp.dto.StudentUpdateDTO;
 import gr.aueb.cf.schoolapp.model.Student;
-import gr.aueb.cf.schoolapp.model.Teacher;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 
 import java.util.List;
 
-public class IStudentServiceImpl implements IStudentService{
+public class StudentServiceImpl implements IStudentService{
 
     private final IStudentDAO studentDAO;
 
-    public IStudentServiceImpl(IStudentDAO studentDAO) {
+    public StudentServiceImpl(IStudentDAO studentDAO) {
         this.studentDAO = studentDAO;
     }
 
