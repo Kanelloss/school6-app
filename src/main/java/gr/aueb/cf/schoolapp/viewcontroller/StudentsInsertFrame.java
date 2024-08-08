@@ -1,19 +1,13 @@
 package gr.aueb.cf.schoolapp.viewcontroller;
 
 import gr.aueb.cf.schoolapp.Main;
-import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
+import gr.aueb.cf.schoolapp.dao.StudentDAOImpl;
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
 import gr.aueb.cf.schoolapp.dto.StudentReadOnlyDTO;
-import gr.aueb.cf.schoolapp.dto.TeacherInsertDTO;
-import gr.aueb.cf.schoolapp.dto.TeacherReadOnlyDTO;
 import gr.aueb.cf.schoolapp.model.Student;
-import gr.aueb.cf.schoolapp.model.Teacher;
 import gr.aueb.cf.schoolapp.service.IStudentService;
 import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
-import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
-import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
-import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentInsertDTO;
 import gr.aueb.cf.schoolapp.validator.StudentValidator;
 
@@ -27,7 +21,7 @@ import java.util.Map;
 public class StudentsInsertFrame extends JFrame {
 
     // Wiring
-    private final IStudentDAO studentDAO = new IStudentDAOImpl();
+    private final IStudentDAO studentDAO = new StudentDAOImpl();
     private final IStudentService studentService = new IStudentServiceImpl(studentDAO);
 
     private static final long serialVersionUID = 1L;

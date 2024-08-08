@@ -1,14 +1,11 @@
 package gr.aueb.cf.schoolapp.viewcontroller;
 
 import gr.aueb.cf.schoolapp.Main;
-import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
+import gr.aueb.cf.schoolapp.dao.StudentDAOImpl;
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
 import gr.aueb.cf.schoolapp.service.IStudentService;
 import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
-import gr.aueb.cf.schoolapp.service.IStudentServiceImpl;
 import gr.aueb.cf.schoolapp.dao.IStudentDAO;
-import gr.aueb.cf.schoolapp.dao.IStudentDAOImpl;
-import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.service.exceptions.StudentNotFoundException;
 import gr.aueb.cf.schoolapp.dto.StudentReadOnlyDTO;
 import gr.aueb.cf.schoolapp.dto.StudentUpdateDTO;
@@ -49,7 +46,7 @@ public class StudentsUpdateDeleteFrame extends JFrame {
     private JButton updateBtn;
     private JButton deleteBtn;
     private JButton closeBtn;
-    private final IStudentDAO studentDAO = new IStudentDAOImpl();
+    private final IStudentDAO studentDAO = new StudentDAOImpl();
     private final IStudentService studentService = new IStudentServiceImpl(studentDAO);
 
     public StudentsUpdateDeleteFrame() {

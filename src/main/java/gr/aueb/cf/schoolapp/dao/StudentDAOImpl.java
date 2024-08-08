@@ -1,7 +1,6 @@
 package gr.aueb.cf.schoolapp.dao;
 
 import gr.aueb.cf.schoolapp.dao.exceptions.StudentDAOException;
-import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
 import gr.aueb.cf.schoolapp.model.Student;
 import gr.aueb.cf.schoolapp.service.util.DBUtil;
 
@@ -12,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IStudentDAOImpl implements IStudentDAO{
+public class StudentDAOImpl implements IStudentDAO{
     @Override
     public Student insert(Student student) throws StudentDAOException {
         String sql = "INSERT INTO students (firstname, lastname) VALUES (?, ?)";
@@ -102,7 +101,7 @@ public class IStudentDAOImpl implements IStudentDAO{
                 student = new Student(
                         rs.getInt("id"),
                         rs.getString("firstname"),
-                        rs.getString("firstname"));
+                        rs.getString("lastname"));
             }
 
             return student;
